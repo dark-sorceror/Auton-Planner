@@ -1,3 +1,5 @@
+const VERSION = "1.1.2"
+
 var points = [];
 var selectedPoint;
 var dragging = false;
@@ -12,9 +14,14 @@ $(document).ready(function () {
 
     ctx.strokeWidth = 2;
     ctx.lineWidth = 5;
-
     var img = new Image();
-    img.src = 'field.png';
+
+    fetch('/get-image-url')
+    .then(response => response.json())
+    .then(data => {
+        const imageUrl = data.image_url;
+        img.src = imageUrl;
+    })
 
     img.onload = function () {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -43,7 +50,6 @@ $(document).ready(function () {
     function refreshCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
 
         for (var i = 0; i < points.length - 1; i++) {
             drawAutonLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
